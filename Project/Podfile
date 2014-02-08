@@ -1,0 +1,7 @@
+pod "MSKit", :path => "../MSKit.podspec"
+
+target "Demo" do
+end
+
+target "DemoTests" do
+end
