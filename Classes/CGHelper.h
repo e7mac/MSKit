@@ -21,19 +21,21 @@
 +(CGMutablePathRef)newArcPathAtPoint:(CGPoint)point withRadius:(float)radius startAngle:(float)startAngle endAngle:(float)endAngle CF_RETURNS_RETAINED;
 +(void)fillArcAtPoint:(CGPoint)point withRadius:(float)radius startAngle:(float)startAngle endAngle:(float)endAngle color:(UIColor *)color;
 +(void)strokeArcAtPoint:(CGPoint)point withRadius:(float)radius startAngle:(float)startAngle endAngle:(float)endAngle color:(UIColor *)color;
++(void)strokeArcAtPoint:(CGPoint)point withRadius:(float)radius startAngle:(float)startAngle endAngle:(float)endAngle width:(float)width color:(UIColor *)color;
 
 #pragma mark Slice
 
 +(CGMutablePathRef)newSlicePathAtPoint:(CGPoint)point withRadius:(float)radius startAngle:(float)startAngle endAngle:(float)endAngle CF_RETURNS_RETAINED;
 +(void)fillSliceAtPoint:(CGPoint)point withRadius:(float)radius startAngle:(float)startAngle endAngle:(float)endAngle color:(UIColor *)color;
 +(void)strokeSliceAtPoint:(CGPoint)point withRadius:(float)radius startAngle:(float)startAngle endAngle:(float)endAngle color:(UIColor *)color;
++(void)strokeSliceAtPoint:(CGPoint)point withRadius:(float)radius startAngle:(float)startAngle endAngle:(float)endAngle width:(float)width color:(UIColor *)color;
 
 #pragma mark Circle
 
 +(CGMutablePathRef)newCirclePathAtPoint:(CGPoint)point withRadius:(float)radius CF_RETURNS_RETAINED;
 +(void)fillCircleAtPoint:(CGPoint)point withRadius:(float)radius color:(UIColor *)color;
 +(void)strokeCircleAtPoint:(CGPoint)point withRadius:(float)radius color:(UIColor *)color;
-
++(void)strokeCircleAtPoint:(CGPoint)point withRadius:(float)radius width:(float)width color:(UIColor *)color;
 
 #pragma mark Text
 +(void)drawText:(NSString *)text atPoint:(CGPoint)point font:(UIFont *)font color:(UIColor *)color;

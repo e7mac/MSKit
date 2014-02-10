@@ -89,6 +89,13 @@
     CGPathRelease(path);
 }
 
++(void)strokeArcAtPoint:(CGPoint)point withRadius:(float)radius startAngle:(float)startAngle endAngle:(float)endAngle width:(float)width color:(UIColor *)color
+{
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetLineWidth(context, width);
+    [self strokeArcAtPoint:point withRadius:radius startAngle:startAngle endAngle:endAngle width:width color:color];
+}
+
 #pragma mark Arc
 
 +(CGMutablePathRef)newSlicePathAtPoint:(CGPoint)point withRadius:(float)radius startAngle:(float)startAngle endAngle:(float)endAngle
@@ -122,6 +129,14 @@
     CGPathRelease(path);
 }
 
+
++(void)strokeSliceAtPoint:(CGPoint)point withRadius:(float)radius startAngle:(float)startAngle endAngle:(float)endAngle width:(float)width color:(UIColor *)color
+{
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetLineWidth(context, width);
+    [self strokeSliceAtPoint:point withRadius:radius startAngle:startAngle endAngle:endAngle color:color];
+}
+
 #pragma mark Circle
 
 
@@ -139,6 +154,11 @@
 +(void)strokeCircleAtPoint:(CGPoint)point withRadius:(float)radius color:(UIColor *)color
 {
     [self strokeArcAtPoint:point withRadius:radius startAngle:0 endAngle:2*PI color:color];
+}
+
++(void)strokeCircleAtPoint:(CGPoint)point withRadius:(float)radius width:(float)width color:(UIColor *)color
+{
+    [self strokeArcAtPoint:point withRadius:radius startAngle:0 endAngle:2*PI width:width color:color];
 }
 
 #pragma mark Text
