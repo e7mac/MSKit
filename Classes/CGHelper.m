@@ -93,7 +93,7 @@
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetLineWidth(context, width);
-    [self strokeArcAtPoint:point withRadius:radius startAngle:startAngle endAngle:endAngle width:width color:color];
+    [self strokeArcAtPoint:point withRadius:radius startAngle:startAngle endAngle:endAngle color:color];
 }
 
 #pragma mark Arc
