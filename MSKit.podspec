@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "MSKit"
-  s.version          = "0.1.0"
+  s.version          = "0.1.2"
   s.summary          = "A set of all the utility classes and extensions used in my iOS projects."
   s.license          = 'MIT'
   s.homepage           = 'http://www.e7mac.com'
