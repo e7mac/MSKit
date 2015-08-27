@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 Mayank Sanganeria. All rights reserved.
 //
 
+#import "MSAnalytics.h"
 #import <Foundation/Foundation.h>
 #import <Mixpanel.h>
 #import <Amplitude.h>
@@ -35,10 +36,16 @@
   [[Amplitude instance] setUserProperties:properties];
 }
 
++ (void)incrementUserProperties:(NSDictionary *)properties
+{
+  [[Mixpanel sharedInstance].people increment:properties];
+//  [Amplitude instance]
+}
+
 + (void)trackCharge:(NSNumber *)charge
 {
   [[Amplitude instance] logRevenue:charge];
-  //  [[Mixpanel sharedInstance] trackCharge:charge];
+//  [[Mixpanel sharedInstance] trackCharge:charge];
 }
 
 

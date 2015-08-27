@@ -14,4 +14,7 @@ Pod::Spec.new do |s|
   s.source_files = 'Classes/*'
   # s.resources = 'Assets/**/*'
 
+  s.dependency 'Mixpanel'
+  s.dependency 'Amplitude-iOS'
+
 end

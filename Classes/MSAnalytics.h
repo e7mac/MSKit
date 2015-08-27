@@ -14,6 +14,7 @@
 
 + (void)setupUserId:(NSString *)userid;
 + (void)setupUserProperties:(NSDictionary *)properties;
++ (void)incrementUserProperties:(NSDictionary *)properties;
 
 + (void)trackCharge:(NSNumber *)charge;
 
