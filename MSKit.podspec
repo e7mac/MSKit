@@ -16,5 +16,5 @@ Pod::Spec.new do |s|
 
   s.dependency 'Mixpanel'
   s.dependency 'Amplitude-iOS'
-
+  s.dependency 'Leanplum-iOS-SDK'
 end
