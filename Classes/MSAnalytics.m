@@ -10,7 +10,8 @@
 #import <Foundation/Foundation.h>
 #import <Mixpanel.h>
 #import <Amplitude.h>
-#import <Leanplum.h>
+#import <Parse.h>
+//#import <Leanplum.h>
 
 @implementation MSAnalytics
 
@@ -25,17 +26,17 @@
     [[Amplitude instance] initializeApiKey:keys[@"amplitude"]];
   }
   if ([keys objectForKey:@"leanplum"]) {
-#ifdef DEBUG
-    LEANPLUM_USE_ADVERTISING_ID;
-    [Leanplum setAppId:keys[@"leanplum"][@"app_id_dev"]
-    withDevelopmentKey:keys[@"leanplum"][@"app_key_dev"]];
-#else
-    [Leanplum setAppId:keys[@"leanplum"][@"app_id_prod"]
-     withProductionKey:keys[@"leanplum"][@"app_key_prod"];
-#endif
-     [Leanplum trackInAppPurchases];
-     [Leanplum trackAllAppScreens];
-     [Leanplum start];
+//#ifdef DEBUG
+//    LEANPLUM_USE_ADVERTISING_ID;
+//    [Leanplum setAppId:keys[@"leanplum"][@"app_id_dev"]
+//    withDevelopmentKey:keys[@"leanplum"][@"app_key_dev"]];
+//#else
+//    [Leanplum setAppId:keys[@"leanplum"][@"app_id_prod"]
+//     withProductionKey:keys[@"leanplum"][@"app_key_prod"];
+//#endif
+//     [Leanplum trackInAppPurchases];
+//     [Leanplum trackAllAppScreens];
+//     [Leanplum start];
   }
 }
 
@@ -43,13 +44,13 @@
 {
   [[Mixpanel sharedInstance] identify:userid];
   [[Amplitude instance] setUserId:userid];
-  [Leanplum setUserId:userid];
+//  [Leanplum setUserId:userid];
 }
 + (void)setupUserProperties:(NSDictionary *)properties
 {
   [[Mixpanel sharedInstance].people set:properties];
   [[Amplitude instance] setUserProperties:properties];
-  [Leanplum setUserAttributes:properties];
+//  [Leanplum setUserAttributes:properties];
 }
 
 + (void)incrementUserProperties:(NSDictionary *)properties
@@ -70,14 +71,16 @@
 {
   [[Mixpanel sharedInstance] track:event];
   [[Amplitude instance] logEvent:event];
-  [Leanplum track:event];
+  [PFAnalytics trackEvent:event];
+//  [Leanplum track:event];
 }
 
 + (void)track:(NSString *)event properties:(NSDictionary *)properties
 {
   [[Mixpanel sharedInstance] track:event properties:properties];
   [[Amplitude instance] logEvent:event withEventProperties:properties];
-  [Leanplum track:event withParameters:properties];
+  [PFAnalytics trackEvent:event dimensions:properties];
+//  [Leanplum track:event withParameters:properties];
 }
 
 @end
