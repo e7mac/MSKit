@@ -14,8 +14,10 @@ Pod::Spec.new do |s|
   s.source_files = 'Classes/*'
   # s.resources = 'Assets/**/*'
 
+  s.dependency 'Fabric'  
+  s.dependency 'Crashlytics'  
   s.dependency 'Mixpanel'
   s.dependency 'Amplitude-iOS'
-  s.dependency 'Parse'  
+  s.dependency 'Parse'
   #s.dependency 'Leanplum-iOS-SDK'
 end
