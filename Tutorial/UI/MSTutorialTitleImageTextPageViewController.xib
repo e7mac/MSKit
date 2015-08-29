@@ -22,7 +22,7 @@
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Snw-ZA-rVn" userLabel="Size View">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xhs-zY-05r" userLabel="GraphicView">
                     <rect key="frame" x="38" y="184" width="300" height="300"/>
@@ -73,7 +73,7 @@
                     </variation>
                 </button>
             </subviews>
-            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="Snw-ZA-rVn" secondAttribute="bottom" id="7AU-xT-Lem"/>
                 <constraint firstItem="KgG-gM-K7a" firstAttribute="top" secondItem="cWt-kO-Iiu" secondAttribute="bottom" constant="30" id="CzE-Ly-nas"/>
