@@ -26,20 +26,6 @@
 
 -(void)animate
 {
-  // TODO - iOS7 tutorial animation bug (temporary fix where animations are turned off for IOS7)
-  if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
-    for (id view in self.graphicView.subviews) {
-      if ([view respondsToSelector:@selector(animate)]) {
-        [view animate];
-      }
-    }
-  } else {
-    for (id view in self.graphicView.subviews) {
-      if ([view respondsToSelector:@selector(animate)]) {
-        //        [view unhide];
-      }
-    }
-  }
 }
 
 @end

@@ -10,7 +10,7 @@
 //#import "MSTutorialPageViewController.h"
 #import "MSTutorialTitleImageTextPageViewController.h"
 #import "MSTutorialTitleFullImageTextPageViewController.h"
-//#import <UIImageView+AFNetworking.h>
+#import <UIImageView+AFNetworking.h>
 //#import "TPURLManager.h"
 
 @interface MSAppTutorialViewController ()
@@ -137,22 +137,10 @@
         UIImage *image = [UIImage imageNamed:imageName];
         NSURL *url = [NSURL URLWithString:page[@"image"][@"name"]];
         UIImageView *imageView = [[UIImageView alloc] init];
-        imageView.frame = [UIScreen mainScreen].bounds;// textImageVC.graphicView.bounds;
-        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        [self setAutoLayoutToEqualView:textImageVC.graphicView view2:imageView];
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
         [textImageVC.graphicView addSubview:imageView];
-//        [imageView setImageWithURL:url placeholderImage:image];
-      } else if ([page[@"image"][@"type"] isEqualToString:@"AnimatedView"]) {
-        NSArray *objects = [[NSBundle mainBundle] loadNibNamed:page[@"image"][@"name"]
-                                                         owner:self
-                                                       options:nil];
-        for (id object in objects) {
-          if ([object isKindOfClass:[NSClassFromString(page[@"image"][@"name"]) class]]) {
-            UIView *view = (UIView *)object;
-            view.frame = textImageVC.graphicView.bounds;
-            [textImageVC.graphicView addSubview:view];
-            break;
-          }
-        }
+        [imageView setImageWithURL:url placeholderImage:image];
       }
     }
     pageVC.view.frame = self.view.bounds;
@@ -181,6 +169,49 @@
 -(void)dismiss
 {
   [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+-(void)setAutoLayoutToEqualView:(UIView *)view1 view2:(UIView *)view2
+{
+  view2.translatesAutoresizingMaskIntoConstraints = NO;
+  [view1 addSubview:view2];
+  
+  NSLayoutConstraint *width =[NSLayoutConstraint
+                              constraintWithItem:view2
+                              attribute:NSLayoutAttributeWidth
+                              relatedBy:0
+                              toItem:view1
+                              attribute:NSLayoutAttributeWidth
+                              multiplier:1.0
+                              constant:0];
+  NSLayoutConstraint *height =[NSLayoutConstraint
+                               constraintWithItem:view2
+                               attribute:NSLayoutAttributeHeight
+                               relatedBy:0
+                               toItem:view1
+                               attribute:NSLayoutAttributeHeight
+                               multiplier:1.0
+                               constant:0];
+  NSLayoutConstraint *top = [NSLayoutConstraint
+                             constraintWithItem:view2
+                             attribute:NSLayoutAttributeTop
+                             relatedBy:NSLayoutRelationEqual
+                             toItem:view1
+                             attribute:NSLayoutAttributeTop
+                             multiplier:1.0f
+                             constant:0.f];
+  NSLayoutConstraint *leading = [NSLayoutConstraint
+                                 constraintWithItem:view2
+                                 attribute:NSLayoutAttributeLeading
+                                 relatedBy:NSLayoutRelationEqual
+                                 toItem:view1
+                                 attribute:NSLayoutAttributeLeading
+                                 multiplier:1.0f
+                                 constant:0.f];
+  [view1 addConstraint:width];
+  [view1 addConstraint:height];
+  [view1 addConstraint:top];
+  [view1 addConstraint:leading];
 }
 
 @end
