@@ -103,9 +103,20 @@
   return pages;
 }
 
+-(void)customizeLooks
+{
+  UIFont *titleFont = [UIFont fontWithName:@"AppleSDGothicNeo-Thin" size:15];
+  UIFont *detailFont = [UIFont fontWithName:@"AppleSDGothicNeo-Bold" size:15];
+}
+
 -(void)preparePages
 {
+  UIFont *titleFont = [UIFont fontWithName:@"AppleSDGothicNeo-Bold" size:35];
+  UIFont *detailFont = [UIFont fontWithName:@"AppleSDGothicNeo-Medium" size:20];
+  
+  
   NSArray *pages = [self pickPagesForTutorial];
+  [self customizeLooks];
   NSMutableArray *pageVCs = [@[] mutableCopy];
   for (NSDictionary *page in pages) {
     UIViewController *pageVC;
@@ -116,6 +127,8 @@
       Class TutorialClass = NSClassFromString(page[@"type"]);
       MSTutorialTitleImageTextPageViewController *textImageVC = [[TutorialClass alloc] init];
       textImageVC.view.frame = self.view.bounds;
+      textImageVC.titleLabel.font = titleFont;
+      textImageVC.detailLabel.font = detailFont;
       textImageVC.titleLabel.text = page[@"title"];
       textImageVC.detailLabel.text = page[@"text"];
       textImageVC.button.hidden = YES;
