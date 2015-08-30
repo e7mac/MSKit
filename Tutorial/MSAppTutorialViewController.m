@@ -13,11 +13,15 @@
 #import <TSMarkdownParser.h>
 #import "PureLayout.h"
 
+#define THIN_BAR_HEIGHT 44
+#define LOGIN_SECTION_HEIGHT 150
+
 @interface MSAppTutorialViewController ()
 
 @property (nonatomic, strong) TSMarkdownParser *titleParser;
 @property (nonatomic, strong) TSMarkdownParser *detailParser;
 
+@property (nonatomic, strong) UIView *headerView;
 @property (nonatomic, strong) UIView *footerView;
 
 @end
@@ -27,10 +31,10 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   self.view.backgroundColor = [UIColor blackColor];
-  //  [self addFooterView];
-  //  [self loginView];
-    [self skipNextView];
-//  [self backForwardView];
+  self.footerView = [self loginView];
+  
+  [self.pageControl autoAlignAxisToSuperviewAxis:ALAxisVertical];
+  [self.pageControl autoPinEdge:ALEdgeBottom toEdge:ALEdgeTop ofView:self.footerView];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -228,7 +232,6 @@
 - (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed
 {
   [super pageViewController:pageViewController didFinishAnimating:finished previousViewControllers:previousViewControllers transitionCompleted:completed];
-  //  self.pageControl.hidden = [[pageViewController.viewControllers firstObject] isKindOfClass:[TPNavigationController class]];
 }
 
 -(BOOL)prefersStatusBarHidden
@@ -249,43 +252,62 @@
   return [UIColor colorWithRed:((rgbValue & 0xFF0000) >> 16)/255.0 green:((rgbValue & 0xFF00) >> 8)/255.0 blue:(rgbValue & 0xFF)/255.0 alpha:1.0];
 }
 
--(void)addHeaderView
+-(void)setHeaderView:(UIView *)v
 {
-  CGFloat headerHeight = 44;
-  UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, headerHeight)];
-  v.backgroundColor = [UIColor redColor];
-  [self.view addSubview:v];
+  if (!v) [_footerView removeFromSuperview];
+  _headerView = v;
+  if (v) {
+    [self.view addSubview:v];
+    [v autoSetDimension:ALDimensionHeight toSize:v.bounds.size.height];
+    [v autoPinEdgeToSuperviewEdge:ALEdgeLeft];
+    [v autoPinEdgeToSuperviewEdge:ALEdgeRight];
+    [v autoPinEdgeToSuperviewEdge:ALEdgeTop];
+  }
 }
 
--(void)addFooterView
+-(void)setFooterView:(UIView *)v
 {
-  CGFloat footerHeight = 44;
-  UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - footerHeight, self.view.bounds.size.width, footerHeight)];
-  v.backgroundColor = [UIColor redColor];
-  [self.view addSubview:v];
+  if (!v) [_footerView removeFromSuperview];
+  _footerView = v;
+  if (v) {
+    [self.view addSubview:v];
+    [v autoSetDimension:ALDimensionHeight toSize:v.bounds.size.height];
+    [v autoPinEdgeToSuperviewEdge:ALEdgeLeft];
+    [v autoPinEdgeToSuperviewEdge:ALEdgeRight];
+    [v autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+  }
 }
 
 -(UIView *)loginView
 {
-  CGFloat footerHeight = 100;
-  UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - footerHeight, self.view.bounds.size.width, footerHeight)];
-  v.backgroundColor = [UIColor redColor];
-  UIButton *login = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+  CGFloat footerHeight = LOGIN_SECTION_HEIGHT;
+  CGFloat buttonHeight = 50;
+  UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, footerHeight)];
+  v.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+  UIButton *login = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, buttonHeight)];
   [login setTitle:@"Login" forState:UIControlStateNormal];
   [v addSubview:login];
-  UIButton *facebook = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 500, 100)];
+  [login addTarget:self action:@selector(login) forControlEvents:UIControlEventTouchUpInside];
+  [login autoAlignAxisToSuperviewAxis:ALAxisVertical];
+  [login autoPinEdgeToSuperviewEdge:ALEdgeTop withInset:20];
+  
+  UIButton *facebook = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 500, buttonHeight)];
   [facebook setTitle:@"Facebook" forState:UIControlStateNormal];
   [v addSubview:facebook];
+  [facebook addTarget:self action:@selector(facebook) forControlEvents:UIControlEventTouchUpInside];
+  [facebook autoAlignAxisToSuperviewAxis:ALAxisVertical];
+  [facebook autoPinEdge:ALEdgeTop toEdge:ALEdgeBottom ofView:login];
+  
   [self.view addSubview:v];
-  return nil;
+  return v;
 }
 
 -(UIView *)skipNextView
 {
   CGFloat buttonPadding = 15;
-  CGFloat footerHeight = 44;
-  UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - footerHeight, self.view.bounds.size.width, footerHeight)];
-  v.backgroundColor = [UIColor redColor];
+  CGFloat footerHeight = THIN_BAR_HEIGHT;
+  UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, footerHeight)];
+  v.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
   [self.view addSubview:v];
   
   UIButton *login = [[UIButton alloc] init];
@@ -302,15 +324,15 @@
   [facebook autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:buttonPadding];
   [facebook autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
   
-  return nil;
+  return v;
 }
 
 -(UIView *)backForwardView
 {
   CGFloat buttonPadding = 15;
-  CGFloat footerHeight = 44;
-  UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - footerHeight, self.view.bounds.size.width, footerHeight)];
-  v.backgroundColor = [UIColor redColor];
+  CGFloat footerHeight = THIN_BAR_HEIGHT;
+  UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, footerHeight)];
+  v.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
   [self.view addSubview:v];
   
   UIButton *login = [[UIButton alloc] init];
@@ -327,7 +349,23 @@
   [facebook autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:buttonPadding];
   [facebook autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
   
-  return nil;
+  return v;
+}
+
+-(UIView *)singleActionFooterView
+{
+  CGFloat footerHeight = THIN_BAR_HEIGHT;
+  UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, footerHeight)];
+  v.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+  [self.view addSubview:v];
+  
+  UIButton *login = [[UIButton alloc] init];
+  [login setTitle:@"ACTION" forState:UIControlStateNormal];
+  [v addSubview:login];
+  [login addTarget:self action:@selector(forward) forControlEvents:UIControlEventTouchUpInside];
+  [login autoCenterInSuperview];
+  
+  return v;
 }
 
 #pragma mark Button Action
@@ -340,6 +378,7 @@
     index--;
     [self setViewControllers:@[self.pageVCs[index]] direction:UIPageViewControllerNavigationDirectionReverse animated:YES completion:nil];
     [[self.pageVCs firstObject] animate];
+    self.pageControl.currentPage = index;
   }
 }
 
@@ -351,6 +390,15 @@
     index++;
     [self setViewControllers:@[self.pageVCs[index]] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
     [[self.pageVCs firstObject] animate];
+    self.pageControl.currentPage = index;
   }
+}
+
+-(void)login
+{
+}
+
+-(void)facebook
+{
 }
 @end

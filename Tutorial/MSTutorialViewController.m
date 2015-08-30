@@ -44,7 +44,6 @@
   [super viewDidLoad];
   
   self.view.backgroundColor = [UIColor whiteColor];
-  
   self.delegate = self;
   self.dataSource = self;
   _currentIndex = 0;
