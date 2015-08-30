@@ -29,4 +29,5 @@ Pod::Spec.new do |s|
   s.dependency 'AFNetworking'
   #s.dependency 'Leanplum-iOS-SDK'
   s.dependency 'TSMarkdownParser'
+  s.dependency 'PureLayout'
 end

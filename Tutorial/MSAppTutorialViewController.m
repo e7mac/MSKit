@@ -11,12 +11,14 @@
 #import "MSTutorialTitleFullImageTextPageViewController.h"
 #import <UIImageView+AFNetworking.h>
 #import <TSMarkdownParser.h>
-
+#import "PureLayout.h"
 
 @interface MSAppTutorialViewController ()
 
 @property (nonatomic, strong) TSMarkdownParser *titleParser;
 @property (nonatomic, strong) TSMarkdownParser *detailParser;
+
+@property (nonatomic, strong) UIView *footerView;
 
 @end
 
@@ -25,6 +27,10 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   self.view.backgroundColor = [UIColor blackColor];
+  //  [self addFooterView];
+  //  [self loginView];
+    [self skipNextView];
+//  [self backForwardView];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -36,19 +42,19 @@
 {
   return @{
            @"font":@{
-             @"title":@{
-               @"regular":@"AvenirNext-Bold",
-               @"bold":@"AvenirNext-DemiBold",
-               @"italic":@"AvenirNext-Italic",
-               @"size": @20,
-             },
-             @"detail":@{
-               @"regular":@"Futura-Medium",
-               @"bold":@"Futura-CondensedExtraBold",
-               @"italic":@"Futura-MediumItalic",
-               @"size": @15
-             }
-           },
+               @"title":@{
+                   @"regular":@"AvenirNext-Bold",
+                   @"bold":@"AvenirNext-DemiBold",
+                   @"italic":@"AvenirNext-Italic",
+                   @"size": @20,
+                   },
+               @"detail":@{
+                   @"regular":@"Futura-Medium",
+                   @"bold":@"Futura-CondensedExtraBold",
+                   @"italic":@"Futura-MediumItalic",
+                   @"size": @15
+                   }
+               },
            @"pages":@[
                @{
                  @"type" : @"MSTutorialTitleFullImageTextPageViewController",
@@ -120,32 +126,6 @@
   }
   return spec;
 }
-
-//-(NSArray *)pickPagesForTutorial
-//{
-//  NSArray *pages;
-//  self.tutorialName = @"default";
-//  //  NSString *source = [TPURLManager sharedInstance].source;
-//  NSString *source = nil;
-//  if (self.tutorialSpecs) {
-//    if ([self.tutorialSpecs objectForKey:source]) {
-//      self.tutorialName = source;
-//    } else {
-//      NSMutableDictionary *specs = [self.tutorialSpecs mutableCopy];
-//      [specs removeObjectsForKeys:@[@"default", @"challenge", @"promo", @"referral"]];
-//      NSArray *tests = [specs allKeys];
-//      if (tests.count > 0) {
-//        int testNumber = arc4random_uniform((unsigned int)tests.count)%(tests.count);
-//        self.tutorialName = tests[testNumber];
-//      }
-//    }
-//    pages = self.tutorialSpecs[self.tutorialName][@"pages"];
-//  } else {
-//    pages = [self defaultPages];
-//    self.tutorialName = @"appDefault";
-//  }
-//  return pages;
-//}
 
 -(void)customizeLooksWithFontDictionary:(NSDictionary *)fonts
 {
@@ -222,9 +202,14 @@
         UIImage *image = [UIImage imageNamed:imageName];
         NSURL *url = [NSURL URLWithString:page[@"image"][@"name"]];
         UIImageView *imageView = [[UIImageView alloc] init];
-        [self setAutoLayoutToEqualView:textImageVC.graphicView view2:imageView];
-        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        imageView.clipsToBounds = YES;
         [textImageVC.graphicView addSubview:imageView];
+        [imageView autoPinEdgeToSuperviewEdge:ALEdgeLeft];
+        [imageView autoPinEdgeToSuperviewEdge:ALEdgeRight];
+        [imageView autoPinEdgeToSuperviewEdge:ALEdgeTop];
+        [imageView autoPinEdgeToSuperviewEdge:ALEdgeBottom];
+        
         [imageView setImageWithURL:url placeholderImage:image];
       }
     }
@@ -256,49 +241,6 @@
   [self dismissViewControllerAnimated:YES completion:nil];
 }
 
--(void)setAutoLayoutToEqualView:(UIView *)view1 view2:(UIView *)view2
-{
-  view2.translatesAutoresizingMaskIntoConstraints = NO;
-  [view1 addSubview:view2];
-  
-  NSLayoutConstraint *width =[NSLayoutConstraint
-                              constraintWithItem:view2
-                              attribute:NSLayoutAttributeWidth
-                              relatedBy:0
-                              toItem:view1
-                              attribute:NSLayoutAttributeWidth
-                              multiplier:1.0
-                              constant:0];
-  NSLayoutConstraint *height =[NSLayoutConstraint
-                               constraintWithItem:view2
-                               attribute:NSLayoutAttributeHeight
-                               relatedBy:0
-                               toItem:view1
-                               attribute:NSLayoutAttributeHeight
-                               multiplier:1.0
-                               constant:0];
-  NSLayoutConstraint *top = [NSLayoutConstraint
-                             constraintWithItem:view2
-                             attribute:NSLayoutAttributeTop
-                             relatedBy:NSLayoutRelationEqual
-                             toItem:view1
-                             attribute:NSLayoutAttributeTop
-                             multiplier:1.0f
-                             constant:0.f];
-  NSLayoutConstraint *leading = [NSLayoutConstraint
-                                 constraintWithItem:view2
-                                 attribute:NSLayoutAttributeLeading
-                                 relatedBy:NSLayoutRelationEqual
-                                 toItem:view1
-                                 attribute:NSLayoutAttributeLeading
-                                 multiplier:1.0f
-                                 constant:0.f];
-  [view1 addConstraint:width];
-  [view1 addConstraint:height];
-  [view1 addConstraint:top];
-  [view1 addConstraint:leading];
-}
-
 - (UIColor *)colorFromHexString:(NSString *)hexString {
   unsigned rgbValue = 0;
   NSScanner *scanner = [NSScanner scannerWithString:hexString];
@@ -307,4 +249,108 @@
   return [UIColor colorWithRed:((rgbValue & 0xFF0000) >> 16)/255.0 green:((rgbValue & 0xFF00) >> 8)/255.0 blue:(rgbValue & 0xFF)/255.0 alpha:1.0];
 }
 
+-(void)addHeaderView
+{
+  CGFloat headerHeight = 44;
+  UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, headerHeight)];
+  v.backgroundColor = [UIColor redColor];
+  [self.view addSubview:v];
+}
+
+-(void)addFooterView
+{
+  CGFloat footerHeight = 44;
+  UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - footerHeight, self.view.bounds.size.width, footerHeight)];
+  v.backgroundColor = [UIColor redColor];
+  [self.view addSubview:v];
+}
+
+-(UIView *)loginView
+{
+  CGFloat footerHeight = 100;
+  UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - footerHeight, self.view.bounds.size.width, footerHeight)];
+  v.backgroundColor = [UIColor redColor];
+  UIButton *login = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
+  [login setTitle:@"Login" forState:UIControlStateNormal];
+  [v addSubview:login];
+  UIButton *facebook = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 500, 100)];
+  [facebook setTitle:@"Facebook" forState:UIControlStateNormal];
+  [v addSubview:facebook];
+  [self.view addSubview:v];
+  return nil;
+}
+
+-(UIView *)skipNextView
+{
+  CGFloat buttonPadding = 15;
+  CGFloat footerHeight = 44;
+  UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - footerHeight, self.view.bounds.size.width, footerHeight)];
+  v.backgroundColor = [UIColor redColor];
+  [self.view addSubview:v];
+  
+  UIButton *login = [[UIButton alloc] init];
+  [login setTitle:@"Skip" forState:UIControlStateNormal];
+  [v addSubview:login];
+  [login addTarget:self action:@selector(dismiss) forControlEvents:UIControlEventTouchUpInside];
+  [login autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:buttonPadding];
+  [login autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+  
+  UIButton *facebook = [[UIButton alloc] init];
+  [facebook setTitle:@"Next" forState:UIControlStateNormal];
+  [v addSubview:facebook];
+  [facebook addTarget:self action:@selector(forward) forControlEvents:UIControlEventTouchUpInside];
+  [facebook autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:buttonPadding];
+  [facebook autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+  
+  return nil;
+}
+
+-(UIView *)backForwardView
+{
+  CGFloat buttonPadding = 15;
+  CGFloat footerHeight = 44;
+  UIView *v = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - footerHeight, self.view.bounds.size.width, footerHeight)];
+  v.backgroundColor = [UIColor redColor];
+  [self.view addSubview:v];
+  
+  UIButton *login = [[UIButton alloc] init];
+  [login setTitle:@"<" forState:UIControlStateNormal];
+  [v addSubview:login];
+  [login addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
+  [login autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:buttonPadding];
+  [login autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+  
+  UIButton *facebook = [[UIButton alloc] init];
+  [facebook setTitle:@">" forState:UIControlStateNormal];
+  [v addSubview:facebook];
+  [facebook addTarget:self action:@selector(forward) forControlEvents:UIControlEventTouchUpInside];
+  [facebook autoPinEdgeToSuperviewEdge:ALEdgeRight withInset:buttonPadding];
+  [facebook autoAlignAxisToSuperviewAxis:ALAxisHorizontal];
+  
+  return nil;
+}
+
+#pragma mark Button Action
+
+-(void)back
+{
+  UIViewController *currentVC = [self.viewControllers firstObject];
+  unsigned long index = [self.pageVCs indexOfObject:currentVC];
+  if (index > 0) {
+    index--;
+    [self setViewControllers:@[self.pageVCs[index]] direction:UIPageViewControllerNavigationDirectionReverse animated:YES completion:nil];
+    [[self.pageVCs firstObject] animate];
+  }
+}
+
+-(void)forward
+{
+  UIViewController *currentVC = [self.viewControllers firstObject];
+  unsigned long index = [self.pageVCs indexOfObject:currentVC];
+  if (index < self.pageVCs.count - 1) {
+    index++;
+    [self setViewControllers:@[self.pageVCs[index]] direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
+    [[self.pageVCs firstObject] animate];
+  }
+}
 @end
