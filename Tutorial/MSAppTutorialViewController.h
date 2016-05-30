@@ -1,15 +1,15 @@
+////
+////  MSAppTutorialViewController.h
+////  GrainProc
+////
+////  Created by Mayank on 8/28/15.
+////  Copyright (c) 2015 Mayank, Kurt. All rights reserved.
+////
 //
-//  MSAppTutorialViewController.h
-//  GrainProc
+//#import "MSTutorialViewController.h"
 //
-//  Created by Mayank on 8/28/15.
-//  Copyright (c) 2015 Mayank, Kurt. All rights reserved.
+//@interface MSAppTutorialViewController : MSTutorialViewController
 //
-
-#import "MSTutorialViewController.h"
-
-@interface MSAppTutorialViewController : MSTutorialViewController
-
-@property (nonatomic, strong) NSDictionary *tutorialSpecs;
-
-@end
+//@property (nonatomic, strong) NSDictionary *tutorialSpecs;
+//
+//@end

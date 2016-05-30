@@ -7,7 +7,6 @@
 //
 
 #import "MSConfigService.h"
-#import <AFNetworking.h>
 
 @implementation MSConfigService
 
@@ -26,17 +25,30 @@
                success:(void (^)(id responseObject))success
                failure:(void (^)(NSError *error))failure
 {
-  NSURLRequest *urlRequest = [NSURLRequest requestWithURL:url];
-  AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:urlRequest];
-  operation.responseSerializer = [AFJSONResponseSerializer serializer];
-  [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-    if (success)
-      success(responseObject);
-  } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-    if (failure)
-      failure(error);
+  NSURLRequest *request = [NSURLRequest requestWithURL:url];
+  [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+    if (!data) {
+      NSLog(@"%s: sendAynchronousRequest error: %@", __FUNCTION__, connectionError);
+      if (failure) failure(connectionError);
+    } else if ([response isKindOfClass:[NSHTTPURLResponse class]]) {
+      NSInteger statusCode = [(NSHTTPURLResponse *)response statusCode];
+      if (statusCode != 200) {
+        NSLog(@"%s: sendAsynchronousRequest status code != 200: response = %@", __FUNCTION__, response);
+        if (failure) failure(connectionError);
+      }
+    }
+    
+    NSError *parseError = nil;
+    NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:0 error:&parseError];
+    if (!dictionary) {
+      NSLog(@"%s: JSONObjectWithData error: %@; data = %@", __FUNCTION__, parseError, [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+      if (failure) failure(parseError);
+    }
+    // now you can use your `dictionary` object
+    if (success) success(dictionary);
   }];
-  [operation start];
+  
+
 }
 
 @end

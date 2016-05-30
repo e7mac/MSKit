@@ -61,13 +61,13 @@
 
 +(void)showOnboarding
 {
-  MSAppTutorialViewController *vc = [[MSAppTutorialViewController alloc] init];
-    [MSConfigService fetchResourceAtPath:[[self sharedInstance] specsPath] success:^(id responseObject) {
-      vc.tutorialSpecs = responseObject;
-      [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:vc animated:YES completion:nil];
-    } failure:^(NSError *error) {
-      [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:vc animated:YES completion:nil];
-    }];
+//  MSAppTutorialViewController *vc = [[MSAppTutorialViewController alloc] init];
+//    [MSConfigService fetchResourceAtPath:[[self sharedInstance] specsPath] success:^(id responseObject) {
+//      vc.tutorialSpecs = responseObject;
+//      [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:vc animated:YES completion:nil];
+//    } failure:^(NSError *error) {
+//      [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:vc animated:YES completion:nil];
+//    }];
 }
 
 @end
